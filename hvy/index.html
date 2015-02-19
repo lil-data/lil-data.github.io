@@ -1,0 +1,107 @@
+<html>
+<head>
+ 	<script language="javascript"  src="./js/p5/p5.js"></script>
+	<!--<script language="javascript" src="../addons/p5.dom.js"></script>-->
+ 	<!--<script language="javascript" src="../addons/p5.sound.js"></script>-->
+ 	<script type="text/javascript" src="./js/heavy/heavy.js"></script>
+	<script type="text/javascript" src="./js/heavy/HeavyLib.js"></script>
+   	<script type="text/javascript">
+
+   		var hvyL = [], hvyR = [];
+      var hvyBuffer = [hvyL,hvyR];
+   		var hvyFreq;
+
+      function hvAudioCallback(buffer) {
+        hvyL = buffer.getChannelData(0);
+        hvyR = buffer.getChannelData(1);
+        hvyBuffer = [hvyL,hvyR];
+        // console.log(hvyBuffer);
+      }
+
+      function hvPrintHook(message) {
+        // console.log(message);
+        // hvyFreq = message.replace( /^\D+/g, '');
+        console.log(message);
+      }
+
+      function hvSendHook(message) {
+        // console.log(message);
+      }
+
+      function setProcessingOn(value) {
+        if (value == "ON") {
+          heavy.stop();
+          document.querySelector("#dsp_tgl").value = "OFF";
+        }
+        else {
+          heavy.start();
+          document.querySelector("#dsp_tgl").value = "ON";
+        }
+      }
+
+      function updateParamOne(value) {
+        document.querySelector("#paramDisplay-1").value = value;
+        heavy.sendFloatToReceiver("#param-1", value);
+        hvyFreq = value*200;
+        console.log(hvyFreq);
+      }
+
+      function updateParamTwo(value) {
+        document.querySelector("#paramDisplay-2").value = value;
+        heavy.sendFloatToReceiver("#param-2", value);
+      }
+
+      function updateParamThree(value) {
+        document.querySelector("#paramDisplay-3").value = value;
+        heavy.sendFloatToReceiver("#param-3", value);
+      }
+
+      function updateParamFour(value) {
+        document.querySelector("#paramDisplay-4").value = value;
+        heavy.sendFloatToReceiver("#param-4", value);
+      }
+
+      heavy = new HeavyLib({ 
+        blockSize : 2048, 
+        audioCallback : hvAudioCallback,
+        printHook : hvPrintHook, 
+        sendHook : hvSendHook
+      });
+    </script>
+ 	<script language="javascript" type="text/javascript" src="./js/p5/sketch.js"></script>
+	<style> body {padding: 0; margin: 0;} </style>
+</head>
+<body>
+	<div id="soundcloud" style="display:block;position:absolute;top:0;z-index:1;width:100%">
+		<iframe width="100%"
+				height="166"
+				scrolling="no"
+				frameborder="no"
+				src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/173324934&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false">
+		</iframe>
+	</div>
+	<div id="myContainer" style="display:block;position:absolute;top:0;z-index:2"></div>
+  <div id="heavy">
+    <div style="display:block;position:absolute;top:200">
+      <input id="dsp_tgl" type="button" value="OFF" style="color:blue" onclick="setProcessingOn(value);">
+    <br>
+
+    <input id="param-1" type="range" min="0" max="1" step="0.01" value="0.5" onchange="updateParamOne(value);" oninput="updateParamOne(value)">
+    <output id="paramDisplay-1" for="param-1" value="0.5">0.77</output>
+    <br>
+
+    <input id="param-2" type="range" min="0" max="1" step="0.01" value="0.5" onchange="updateParamTwo(value);" oninput="updateParamTwo(value)">
+    <output id="paramDisplay-2" for="param-2" value="0.5"></output>
+    <br>
+
+    <input id="param-3" type="range" min="0" max="1" step="0.01" value="0.5" onchange="updateParamThree(value);" oninput="updateParamThree(value)">
+    <output id="paramDisplay-3" for="param-3" value="0.5"></output>
+    <br>
+
+    <input id="param-4" type="range" min="0" max="1" step="0.01" value="0.5" onchange="updateParamFour(value);" oninput="updateParamFour(value)">
+    <output id="paramDisplay-4" for="param-4" value="0.5"></output>
+    <br>
+    </div>
+  </div>
+</body>
+</html>

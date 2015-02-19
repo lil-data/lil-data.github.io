@@ -5,6 +5,8 @@ var columns;
 var rows;
 var board;
 var next;
+var tX = 197.5,tY = 33.5;
+var track = [tX,tY];
 
 function setup() {
   var myCanvas = createCanvas(windowWidth,166);
@@ -34,11 +36,33 @@ function setup() {
 function draw() {
   clear();
   background(255,0);
+  conway();
+  scope();
+  // button();
+}
+
+function button(){
+  var centre = [197.5,33.5];
+  fill(255);
+  ellipse(centre[0],centre[1],35,35);
+  fill(0);
+  ellipse(track[0],track[1],7,7);
+}
+
+function surveil() {
+  var xC = map(mouseX*sqrt(1-0.5*pow(mouseY,2)),0,900,0,35);
+  var yC = map(mouseY*sqrt(1-0.5*pow(mouseX,2)),0,900,0,35);
+  track[0] = xC;
+  track[1] = yC;
+  print(mouseX*sqrt(mouseY));
+  // track[1] = map(mouseY,0,height,16,40);
+}
+
+function conway(){
   av.loadPixels();
   image(av,2,2);
   generate();
   var f = hvyFreq/50;
-  print(f);
   for ( var i = 0; i < columns;i++) {
     for ( var j = 0; j < rows;j++) {
       if ((board[i][j] == 1)){
@@ -47,13 +71,9 @@ function draw() {
     }
   }
   av.updatePixels();
-  drawWav();
 }
 
-// hvyBuffer
-// hvyFreq
-
-function drawWav(){
+function scope(){
   var offset = s+13;
   
   noStroke();
@@ -64,9 +84,9 @@ function drawWav(){
     stroke(51);
     // line(i+offset, floor(random(65,80)), i+offset, floor(random(120,135)));
     if(hvyBuffer[i] > 0)
-      line(i+offset, 112-hvyBuffer[i]*70, i+offset,112 );
+      line(i+offset, 112-hvyL[i]*70, i+offset,112 );
     else
-      line(i+offset, 112-hvyBuffer[i]*40, i+offset,112 );
+      line(i+offset, 112-hvyL[i]*40, i+offset,112 );
   };
   
   noStroke();
@@ -79,6 +99,7 @@ function mouseMoved() {
   if(mouseX < 162 && mouseY < 162) {
     init();
   }
+  // surveil();
 }
 
 // Fill board randomly
